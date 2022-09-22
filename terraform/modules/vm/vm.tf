@@ -11,13 +11,18 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
+resource "tls_private_key" "main_ssh"{
+	algorithm = "RSA"
+	rsa_bits = 4096
+}
+
 resource "azurerm_linux_virtual_machine" "test" {
   name                = "${var.application_type}-vm"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
   size                = "Standard_DS2_v2"
   admin_username      = "odl_user_208292"
-  network_interface_ids = []
+  network_interface_ids = [azurerm_network_interface.main.id]
   admin_ssh_key {
     username   = "odl_user_208292"
     public_key = tls_private_key.main_ssh.public_key_openssh
