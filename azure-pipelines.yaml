@@ -36,6 +36,13 @@ stages:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceName: 'myserviceconnection1'
+- stage: Build1
+  displayName: fakerestapi
+  jobs:
+  - job: Build
+    pool:
+      name: myAgentPool
+    steps:
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
@@ -50,7 +57,7 @@ stages:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      vmImage: 'myAgentPool'
+      name: myAgentPool
     environment: 'TEST'
     strategy:
       runOnce:
@@ -60,9 +67,10 @@ stages:
             displayName: 'Deploy Azure Web App'
             inputs:
               azureSubscription: 'myserviceconnection1'
-              appName: 'myApplication'
+              appName: 'myapplication1-AppService'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
