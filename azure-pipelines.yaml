@@ -36,6 +36,40 @@ stages:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceName: 'myserviceconnection1'
+
+- stage: tests
+  displayName: 'Postman_tests'
+  jobs:
+    - job: runPostmanTest
+      pool:
+        name: myAgentPool
+      steps:
+        - task: CmdLine@2
+          displayName: Install newman
+          inputs:
+            script: |
+              sudo apt update
+              sudo apt install nodejs npm
+              sudo npm install -g newman@4.0.0
+              sudo npm install -g newman-reporter-junitfull
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        
+        - task: CmdLine@2
+          displayName: 'Run Regression Test Suite'
+          continueOnError: true
+          inputs:
+            script: 'newman run automatedtesting/postman/Regression Tests.postman_collection.json -e automatedtesting/postman/DummyRestAPI Environment For Regression Testing.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        - task: CmdLine@2
+          displayName: 'Data Validation Test Suite'
+          inputs:
+            script: 'newman run automatedtesting/postman/Data Validation Tests.postman_collection.json -e automatedtesting/postman/Sample Environment For Data Validation Testing.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: '**/*.xml'
+
 - stage: Build1
   displayName: fakerestapi
   jobs:
@@ -70,39 +104,6 @@ stages:
               appName: 'myapplication1-AppService'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-
-- stage: tests
-  displayName: 'Postman_tests'
-  jobs:
-    - job: runPostmanTest
-      pool:
-        name: myAgentPool
-      steps:
-        - task: CmdLine@2
-          displayName: Install newman
-          inputs:
-            script: |
-              sudo apt update
-              sudo apt install nodejs npm
-              sudo npm install -g newman@4.0.0
-              sudo npm install -g newman-reporter-junitfull
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
-        
-        - task: CmdLine@2
-          displayName: 'Run Regression Test Suite'
-          continueOnError: true
-          inputs:
-            script: 'newman run automatedtesting/postman/Regression Tests.postman_collection.json -e automatedtesting/postman/DummyRestAPI Environment For Regression Testing.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml' 
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
-        - task: CmdLine@2
-          displayName: 'Data Validation Test Suite'
-          inputs:
-            script: 'newman run automatedtesting/postman/Data Validation Tests.postman_collection.json -e automatedtesting/postman/Sample Environment For Data Validation Testing.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml'
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
-        - task: PublishTestResults@2
-          inputs:
-            testResultsFormat: 'JUnit'
-            testResultsFiles: '**/*.xml'
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
