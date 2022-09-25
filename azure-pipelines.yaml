@@ -25,10 +25,10 @@ stages:
     - task: TerraformCLI@0
       displayName: 'terraform plan '
       inputs:
-        command: 'plan -lock=false'
+        command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceName: 'myserviceconnection1'
-        commandOptions: -out solution.plan
+        commandOptions:  -lock=false -out solution.plan
     - task: TerraformCLI@0
       displayName: 'terraform apply'
       inputs:
