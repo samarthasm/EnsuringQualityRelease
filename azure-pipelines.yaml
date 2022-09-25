@@ -36,6 +36,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceName: 'myserviceconnection1'
+        commandOptions:  -lock=false
 
 - stage: Build1
   displayName: fakerestapi
