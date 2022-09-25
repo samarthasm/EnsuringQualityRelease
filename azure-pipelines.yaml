@@ -152,8 +152,8 @@ stages:
           displayName: 'Data Validation Test Suite'
           inputs:
             script: |
-              newman run 'automatedtesting/postman/DataValidationTests.postman_collection.json' -e 'automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json' --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+              newman run DataValidationTests.postman_collection.json -e SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
+            workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
