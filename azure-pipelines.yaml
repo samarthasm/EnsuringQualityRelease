@@ -158,41 +158,40 @@ stages:
             PathtoPublish: 'automatedtesting/jmeter'
             ArtifactName: 'jmeter'
             publishLocation: Container
-#
-#
-#    - job: runPostmanTest
-#      pool:
-#        name: myAgentPool
-#      steps:
-#        - task: CmdLine@2
-#          displayName: Install newman
-#          inputs:
-#            script: |
-#              sudo apt update
-#              sudo apt-get update
-#              sudo apt-get dist-upgrade
-#              sudo apt install nodejs npm
-#              sudo npm install -g newman@4.0.0
-#              sudo npm install -g newman-reporter-junitfull
-#            workingDirectory: '$(System.DefaultWorkingDirectory)'
-#        
-#        - task: CmdLine@2
-#          displayName: 'Run Regression Test Suite'
-#          continueOnError: true
-#          inputs:
-#            script: |
-#              newman run automatedtesting/postman/RegressionTests.postman_collection.json -e automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml
-#            workingDirectory: '$(System.DefaultWorkingDirectory)'
-#        - task: CmdLine@2
-#          displayName: 'Data Validation Test Suite'
-#          inputs:
-#            script: |
-#              newman run DataValidationTests.postman_collection.json -e SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
-#            workingDirectory: '$(System.DefaultWorkingDirectory)'
-#        - task: PublishTestResults@2
-#          inputs:
-#            testResultsFormat: 'JUnit'
-#            testResultsFiles: '**/*.xml'
+
+    - job: runPostmanTest
+      pool:
+        name: myAgentPool
+      steps:
+        - task: CmdLine@2
+          displayName: Install newman
+          inputs:
+            script: |
+              sudo apt update
+              sudo apt-get update
+              sudo apt-get dist-upgrade
+              sudo apt install nodejs npm
+              sudo npm install -g newman@4.0.0
+              sudo npm install -g newman-reporter-junitfull
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        
+        - task: CmdLine@2
+          displayName: 'Run Regression Test Suite'
+          continueOnError: true
+          inputs:
+            script: |
+              newman run automatedtesting/postman/RegressionTests.postman_collection.json -e automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        - task: CmdLine@2
+          displayName: 'Data Validation Test Suite'
+          inputs:
+            script: |
+              newman run DataValidationTests.postman_collection.json -e SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: '**/*.xml'
 
   # - deployment: VMDeploy
   #   displayName: NAME
