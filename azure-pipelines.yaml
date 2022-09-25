@@ -147,8 +147,7 @@ stages:
           continueOnError: true
           inputs:
             script: |
-              newman run 'automatedtesting/postman/RegressionTests.postman_collection.json' -e 'automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json' --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml 
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+              newman run "$(System.DefaultWorkingDirectory)/automatedtesting/postman/RegressionTests.postman_collection.json" -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json" --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml 
         - task: CmdLine@2
           displayName: 'Data Validation Test Suite'
           inputs:
