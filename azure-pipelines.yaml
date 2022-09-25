@@ -122,6 +122,7 @@ stages:
                   targetType: inline
                   script: |
                     python3 $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py
+                    print ('$(System.DefaultWorkingDirectory)')
 
 - stage: tests
   displayName: 'Postman_tests'
