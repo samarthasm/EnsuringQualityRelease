@@ -159,9 +159,6 @@ stages:
             ArtifactName: 'jmeter'
             publishLocation: Container
 
-- stage: tests
-  displayName: 'Postman_tests'
-  jobs:
     - job: runPostmanTest
       pool:
         name: myAgentPool
