@@ -124,7 +124,7 @@ stages:
                     python3 $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py
 
 - stage: tests
-  displayName: 'Jmeter_tests'
+  displayName: 'Postman and Jmeter_tests'
   jobs:
     - job: JmeterTests
       displayName: JmeterTestsRun
