@@ -122,7 +122,6 @@ stages:
                   targetType: inline
                   script: |
                     python3 $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py
-                    print ('$(System.DefaultWorkingDirectory)')
 
 - stage: tests
   displayName: 'Postman_tests'
@@ -148,13 +147,13 @@ stages:
           continueOnError: true
           inputs:
             script: |
-              newman run automatedtesting/postman/RegressionTests.postman_collection.json -e automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml 
+              newman run 'automatedtesting/postman/RegressionTests.postman_collection.json' -e 'automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json' --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml 
             workingDirectory: '$(System.DefaultWorkingDirectory)'
         - task: CmdLine@2
           displayName: 'Data Validation Test Suite'
           inputs:
             script: |
-              newman run automatedtesting/postman/DataValidationTests.postman_collection.json -e automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
+              newman run 'automatedtesting/postman/DataValidationTests.postman_collection.json' -e 'automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json' --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
             workingDirectory: '$(System.DefaultWorkingDirectory)'
         - task: PublishTestResults@2
           inputs:
