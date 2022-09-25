@@ -146,12 +146,12 @@ stages:
           continueOnError: true
           inputs:
             script: 'newman run automatedtesting/postman/RegressionTests.postman_collection.json -e automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml' 
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         - task: CmdLine@2
           displayName: 'Data Validation Test Suite'
           inputs:
             script: 'newman run automatedtesting/postman/DataValidationTests.postman_collection.json -e automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml'
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
