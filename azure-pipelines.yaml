@@ -140,19 +140,19 @@ stages:
               sudo apt install nodejs npm
               sudo npm install -g newman@4.0.0
               sudo npm install -g newman-reporter-junitfull
-            workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
         
         - task: CmdLine@2
           displayName: 'Run Regression Test Suite'
           continueOnError: true
           inputs:
-            script: 'newman run $(System.DefaultWorkingDirectory)/automatedtesting/postman/RegressionTests.postman_collection.json -e $(System.DefaultWorkingDirectory)automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml' 
-            workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+            script: 'newman run automatedtesting/postman/RegressionTests.postman_collection.json -e automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
         - task: CmdLine@2
           displayName: 'Data Validation Test Suite'
           inputs:
-            script: 'newman run $(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidationTests.postman_collection.json -e $(System.DefaultWorkingDirectory)automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+            script: 'newman run automatedtesting/postman/DataValidationTests.postman_collection.json -e automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
