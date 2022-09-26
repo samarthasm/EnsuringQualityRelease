@@ -162,37 +162,37 @@ stages:
             ArtifactName: 'jmeter'
             publishLocation: Container
 
-#    - job: runPostmanTest
-#      pool:
-#        name: myAgentPool
-#      steps:
-#        - task: CmdLine@2
-#          displayName: Install newman
-#          inputs:
-#            script: |
-#              sudo apt update
-#              sudo apt-get update
-#              sudo apt-get dist-upgrade
-#              sudo apt install nodejs npm
-#             sudo npm install -g newman@4.0.0
-#              sudo npm install -g newman-reporter-junitfull
-#            workingDirectory: '$(System.DefaultWorkingDirectory)'
+    - job: runPostmanTest
+      pool:
+        name: myAgentPool
+      steps:
+        - task: CmdLine@2
+          displayName: Install newman
+          inputs:
+            script: |
+              sudo apt update
+              sudo apt-get update
+              sudo apt-get dist-upgrade
+              sudo apt install nodejs npm
+             sudo npm install -g newman@4.0.0
+              sudo npm install -g newman-reporter-junitfull
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
         
-#        - task: CmdLine@2
-#          displayName: 'Run Regression Test Suite'
-#          continueOnError: true
-#          inputs:
-#            script: |
-#              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/RegressionTests.postman_collection.json" -r cli,junitfull --reporter-junitfull-export result-data-regression-test.xml
-#        - task: CmdLine@2
-#          displayName: 'Data Validation Test Suite'
-#          inputs:
-#            script: |
-#              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidationTests.postman_collection.json" -r cli,junitfull --reporter-junitfull-export result-data-validation-test.xml
-#        - task: PublishTestResults@2
-#          inputs:
-#            testResultsFormat: 'JUnit'
-#            testResultsFiles: '**/*.xml'
+        - task: CmdLine@2
+          displayName: 'Run Regression Test Suite'
+          continueOnError: true
+          inputs:
+            script: |
+              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/RegressionTests.postman_collection.json" -r cli,junitfull --reporter-junitfull-export result-data-regression-test.xml
+        - task: CmdLine@2
+          displayName: 'Data Validation Test Suite'
+          inputs:
+            script: |
+              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidationTests.postman_collection.json" -r cli,junitfull --reporter-junitfull-export result-data-validation-test.xml
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: '**/*.xml'
 
   # - deployment: VMDeploy
   #   displayName: NAME
