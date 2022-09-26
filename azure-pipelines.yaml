@@ -107,6 +107,9 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
+                    sudo mkdir -p /var/log/selenium/
+                    sudo touch /var/log/selenium/selenium.log
+                    sudo chmod 777 /var/log/selenium/selenium.log
                     sudo apt-get upgrade -y
                     sudo apt-get install python3-pip -y
                     sudo apt-get install unzip -y
@@ -121,7 +124,7 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    python3 $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py
+                    python3 $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py 2>&1 | tee -a /var/log/selenium/selenium.log
 
 - stage: tests
   displayName: 'Postman and Jmeter_tests'
@@ -180,14 +183,12 @@ stages:
           continueOnError: true
           inputs:
             script: |
-              newman run automatedtesting/postman/RegressionTests.postman_collection.json -e automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_regression.xml
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DummyRestAPIEnvironmentForRegressionTests.postman_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/RegressionTests.postman_collection.json" -r cli,junitfull --reporter-junitfull-export result-data-regression-test.xml
         - task: CmdLine@2
           displayName: 'Data Validation Test Suite'
           inputs:
             script: |
-              newman run DataValidationTests.postman_collection.json -e SampleEnvironmentForDataValidationTests.postman_environment.json --reporters cli,junit --reporter-junit-export Results\junitReport_datavalidation.xml
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+              newman run -e "$(System.DefaultWorkingDirectory)/automatedtesting/postman/SampleEnvironmentForDataValidationTests.postman_environment.json" "$(System.DefaultWorkingDirectory)/automatedtesting/postman/DataValidationTests.postman_collection.json" -r cli,junitfull --reporter-junitfull-export result-data-validation-test.xml
         - task: PublishTestResults@2
           inputs:
             testResultsFormat: 'JUnit'
